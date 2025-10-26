@@ -1,0 +1,41 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: shoestore-backend
+  
+  datasource:
+    url: jdbc:mysql://mysql:3306/shoestore?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: shoestore
+    password: shoestore123
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+  
+  security:
+    user:
+      name: admin
+      password: admin123
+
+jwt:
+  secret: mySecretKey123456789012345678901234567890
+  expiration: 86400000
+
+razorpay:
+  key-id: your_razorpay_key_id
+  key-secret: your_razorpay_key_secret
+
+cors:
+  allowed-origins: http://localhost:3000
+  allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+  allowed-headers: "*"
+  allow-credentials: true
+

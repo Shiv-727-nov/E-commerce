@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: shoestore-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: shoestore
+      MYSQL_USER: shoestore
+      MYSQL_PASSWORD: shoestore123
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - shoestore-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: shoestore-backend
+    restart: always
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/shoestore?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: shoestore
+      SPRING_DATASOURCE_PASSWORD: shoestore123
+      JWT_SECRET: mySecretKey123456789012345678901234567890
+      RAZORPAY_KEY_ID: your_razorpay_key_id
+      RAZORPAY_KEY_SECRET: your_razorpay_key_secret
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+    networks:
+      - shoestore-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: shoestore-frontend
+    restart: always
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - shoestore-network
+
+volumes:
+  mysql_data:
+
+networks:
+  shoestore-network:
+    driver: bridge
+
